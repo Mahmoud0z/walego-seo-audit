@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walego — Blog SEO Audit (/blog/ only)</title>
+<style>
+  :root{--bg:#0a0c10;--card:#12151c;--card2:#181c26;--border:#1e2230;--text:#e8e9ed;--dim:#6b7084;--purple:#8b5cf6;--purple-bg:rgba(139,92,246,.12);--cyan:#22d3ee;--cyan-bg:rgba(34,211,238,.1);--green:#34d399;--green-bg:rgba(52,211,153,.1);--amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--red:#f87171;--red-bg:rgba(248,113,113,.08)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  .wrap{max-width:1320px;margin:0 auto;padding:28px 20px}
+  h1{font-size:26px;font-weight:700}
+  .sub{color:var(--dim);font-size:12px;margin:4px 0 24px}
+  a{color:var(--purple);text-decoration:none}a:hover{text-decoration:underline}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.g5{grid-template-columns:repeat(3,1fr)}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:hidden}
+  .card-title{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+  .stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+  .stat-n{font-size:36px;font-weight:800;line-height:1}
+  .stat-l{font-size:11px;color:var(--dim);margin-top:4px}
+  .bar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .bar-l{width:220px;font-size:11px;color:var(--dim);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-l a{color:var(--dim);font-size:10px;text-decoration:none}.bar-l a:hover{color:var(--purple);text-decoration:underline}
+  .small-url{display:block;font-size:9px;color:var(--dim);font-weight:400;margin-top:1px}.small-url a{color:var(--dim);font-size:9px}.small-url a:hover{color:var(--purple)}
+  .bar-t{flex:1;height:24px;background:rgba(255,255,255,.03);border-radius:5px;overflow:hidden}
+  .bar-f{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:700;color:white;min-width:20px}
+  .bar-v{width:30px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0}
+  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.3px}
+  .t-pillar{background:var(--purple-bg);color:var(--purple)}
+  .t-cluster{background:rgba(107,112,132,.2);color:#9ca3af}
+  .t-orphan{background:var(--red-bg);color:var(--red)}
+  .tree-group{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+  .tree-head{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+  .tree-head-title{font-size:13px;font-weight:600;flex:1}
+  .tree-head-url{font-size:10px;color:var(--dim)}
+  .tree-row{padding:10px 16px 10px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px}
+  .tree-row:last-child{border-bottom:none}
+  .tree-row:hover{background:var(--card2)}
+  .tree-row-name{flex:1}
+  .tree-row-url{font-size:10px;color:var(--dim)}
+  .link-pill{padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600}
+  .lp-in{background:var(--green-bg);color:var(--green)}
+  .lp-out{background:var(--cyan-bg);color:var(--cyan)}
+  .lp-zero{background:var(--red-bg);color:var(--red)}
+  .lm{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+  .lm-h{padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .lm-h:hover{background:var(--card2)}
+  .lm-name{flex:1;font-size:12px;font-weight:600}
+  .lm-b{display:none;padding:10px 16px;border-top:1px solid var(--border);font-size:11px}
+  .lm-b.open{display:block}
+  .lm-b ul{list-style:none;margin:4px 0 8px}
+  .lm-b li{padding:2px 0}
+  .lm-b li::before{content:"→ ";color:var(--dim)}
+  .lm-b .in li::before{content:"← ";color:var(--green)}
+  .lm-label{font-size:10px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+  .issue{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12px}
+  .issue.c{border-left:3px solid var(--red)}.issue.h{border-left:3px solid var(--amber)}.issue.m{border-left:3px solid var(--cyan)}
+  .issue-n{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;flex-shrink:0}
+  .issue-n.c{background:var(--red-bg);color:var(--red)}.issue-n.h{background:var(--amber-bg);color:var(--amber)}.issue-n.m{background:var(--cyan-bg);color:var(--cyan)}
+  .issue-t{font-weight:600}
+  .issue-d{color:var(--dim);font-size:11px;margin-top:2px}
+  .divider{height:1px;background:var(--border);margin:28px 0}
+  .section-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+  @media(max-width:1000px){.split{grid-template-columns:1fr}}
+  .split-col{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;overflow:hidden}
+  .split-title{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .node{border-radius:8px;padding:10px 14px;margin-bottom:6px;font-size:11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .node a{font-size:9px;color:var(--dim)}.node a:hover{color:var(--purple)}
+  .node-pillar{background:var(--purple-bg);border:1.5px solid var(--purple)}
+  .node-cluster{background:var(--card2);border:1px solid #2a2f3e;margin-left:24px}
+  .node-orphan{background:var(--red-bg);border:1px dashed var(--red)}
+  .node-new{background:rgba(34,211,238,.06);border:1.5px dashed var(--cyan);margin-left:24px}
+  .node-name{font-weight:600;flex:1}
+  .node-meta{font-size:9px;color:var(--dim)}
+  .act{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0}
+  .act-keep{background:var(--green-bg);color:var(--green)}
+  .act-expand{background:var(--amber-bg);color:var(--amber)}
+  .act-add{background:var(--cyan-bg);color:var(--cyan)}
+  .act-fix{background:var(--red-bg);color:var(--red)}
+  .act-toc{background:rgba(139,92,246,.15);color:var(--purple)}
+  .slug{display:block;font-family:monospace;font-size:10px;color:var(--cyan);margin-bottom:2px;opacity:.85}
+  .pillar-group{margin-bottom:18px}
+  .pillar-group-title{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-left:2px}
+  .connector{width:24px;display:flex;justify-content:center;position:relative}
+  .connector::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--border)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Walego Blog Audit — /blog/ pages only</h1>
+<p class="sub">2 pillars &middot; 11 clusters &middot; 5 rewrites &middot; 7 new articles to write &middot; every page = LinkedIn outreach &middot; May 2026</p>
+
+<!-- ====== STATS ====== -->
+<div class="g5" style="margin-bottom:20px">
+  <div class="stat-box"><div class="stat-n" style="color:var(--purple)">2</div><div class="stat-l">True Pillars</div></div>
+  <div class="stat-box"><div class="stat-n" style="color:var(--cyan)">11</div><div class="stat-l">Cluster Posts</div></div>
+  <div class="stat-box"><div class="stat-n" style="color:var(--green)">0</div><div class="stat-l">Orphaned</div></div>
+  <div class="stat-box"><div class="stat-n" style="color:var(--amber)">4</div><div class="stat-l">Thin Content</div></div>
+  <div class="stat-box"><div class="stat-n" style="color:var(--green)">7</div><div class="stat-l">New to Write</div></div>
+</div>
+
+<!-- ====== CHARTS ====== -->
+<div class="g3" style="margin-bottom:20px">
+  <!-- Blog Link Health -->
+  <div class="card">
+    <div class="card-title">Blog Link Health</div>
+    <svg viewBox="0 0 200 200" style="width:100%;max-width:200px;display:block;margin:0 auto">
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--green)" stroke-width="22" stroke-dasharray="217 283" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--amber)" stroke-width="22" stroke-dasharray="72 428" stroke-dashoffset="-217" transform="rotate(-90 100 100)"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--red)" stroke-width="22" stroke-dasharray="181 319" stroke-dashoffset="-289" transform="rotate(-90 100 100)"/>
+      <text x="100" y="90" text-anchor="middle" fill="var(--green)" font-size="24" font-weight="800">46%</text>
+      <text x="100" y="112" text-anchor="middle" fill="var(--dim)" font-size="10">well-linked</text>
+    </svg>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center">
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--green)"></span>3+ links: 6</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--amber)"></span>1-2 links: 2</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--red)"></span>Zero: 5</span>
+    </div>
+  </div>
+
+  <!-- Blog Type Breakdown -->
+  <div class="card">
+    <div class="card-title">Blog Structure</div>
+    <svg viewBox="0 0 200 200" style="width:100%;max-width:200px;display:block;margin:0 auto">
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--purple)" stroke-width="22" stroke-dasharray="73 398" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--cyan)" stroke-width="22" stroke-dasharray="398 73" stroke-dashoffset="-73" transform="rotate(-90 100 100)"/>
+      <text x="100" y="90" text-anchor="middle" fill="white" font-size="28" font-weight="800">13</text>
+      <text x="100" y="108" text-anchor="middle" fill="var(--dim)" font-size="10">blog posts</text>
+    </svg>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center">
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--purple)"></span>Pillars: 2</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--cyan)"></span>Clusters: 11</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--dim)"></span>Orphan: 0</span>
+    </div>
+  </div>
+
+  <!-- Issue Severity -->
+  <div class="card">
+    <div class="card-title">Blog SEO Issues</div>
+    <svg viewBox="0 0 200 200" style="width:100%;max-width:200px;display:block;margin:0 auto">
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--red)" stroke-width="22" stroke-dasharray="141 359" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--amber)" stroke-width="22" stroke-dasharray="141 359" stroke-dashoffset="-141" transform="rotate(-90 100 100)"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="var(--cyan)" stroke-width="22" stroke-dasharray="188 312" stroke-dashoffset="-282" transform="rotate(-90 100 100)"/>
+      <text x="100" y="95" text-anchor="middle" fill="white" font-size="28" font-weight="800">12</text>
+      <text x="100" y="115" text-anchor="middle" fill="var(--dim)" font-size="10">issues</text>
+    </svg>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center">
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--red)"></span>Critical: 3</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--amber)"></span>High: 3</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="dot" style="background:var(--cyan)"></span>Medium: 6</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== INBOUND / OUTBOUND CHARTS ====== -->
+<div class="g2" style="margin-bottom:20px">
+  <div class="card">
+    <div class="card-title">&#8592; Inbound Links (blog-to-blog only)</div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank">walego.co/blog/linkedin-profile-optimization</a></div><div class="bar-t"><div class="bar-f" style="width:100%;background:var(--green)"></div></div><div class="bar-v" style="color:var(--green)">5</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank">walego.co/blog/linkedin-sales-navigator-guide</a></div><div class="bar-t"><div class="bar-f" style="width:80%;background:var(--green)"></div></div><div class="bar-v" style="color:var(--green)">4</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank">walego.co/blog/personalize-linkedin-outreach-scale</a></div><div class="bar-t"><div class="bar-f" style="width:80%;background:var(--green)"></div></div><div class="bar-v" style="color:var(--green)">4</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank">walego.co/blog/36-percent-response-rate...</a></div><div class="bar-t"><div class="bar-f" style="width:80%;background:var(--green)"></div></div><div class="bar-v" style="color:var(--green)">4</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank">walego.co/blog/linkedin-prospecting-strategy</a></div><div class="bar-t"><div class="bar-f" style="width:60%;background:var(--cyan)"></div></div><div class="bar-v" style="color:var(--cyan)">3</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank">walego.co/blog/linkedin-engagement-strategy</a></div><div class="bar-t"><div class="bar-f" style="width:40%;background:var(--amber)"></div></div><div class="bar-v" style="color:var(--amber)">2</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank">walego.co/blog/scalable-b2b-lead-generation...</a></div><div class="bar-t"><div class="bar-f" style="width:40%;background:var(--amber)"></div></div><div class="bar-v" style="color:var(--amber)">2</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/multi-account-prospecting-strategy" target="_blank">walego.co/blog/multi-account-prospecting...</a></div><div class="bar-t"><div class="bar-f" style="width:20%;background:var(--amber)"></div></div><div class="bar-v" style="color:var(--amber)">1</div></div>
+    <div class="bar"><div class="bar-l" style="color:var(--red)">5 posts = ZERO inbound</div><div class="bar-t"><div class="bar-f" style="width:3%;background:var(--red)"></div></div><div class="bar-v" style="color:var(--red)">0</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#8594; Outbound Links (blog-to-blog only)</div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank">walego.co/blog/linkedin-profile-optimization</a></div><div class="bar-t"><div class="bar-f" style="width:100%;background:var(--cyan)"></div></div><div class="bar-v" style="color:var(--cyan)">5</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank">walego.co/blog/36-percent-response-rate...</a></div><div class="bar-t"><div class="bar-f" style="width:100%;background:var(--cyan)"></div></div><div class="bar-v" style="color:var(--cyan)">5</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank">walego.co/blog/scalable-b2b-lead-generation...</a></div><div class="bar-t"><div class="bar-f" style="width:100%;background:var(--cyan)"></div></div><div class="bar-v" style="color:var(--cyan)">5</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank">walego.co/blog/best-linkedin-automation-tools</a></div><div class="bar-t"><div class="bar-f" style="width:60%;background:var(--purple)"></div></div><div class="bar-v" style="color:var(--purple)">3</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank">walego.co/blog/linkedin-prospecting-strategy</a></div><div class="bar-t"><div class="bar-f" style="width:60%;background:var(--purple)"></div></div><div class="bar-v" style="color:var(--purple)">3</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank">walego.co/blog/personalize-linkedin-outreach...</a></div><div class="bar-t"><div class="bar-f" style="width:40%;background:var(--purple)"></div></div><div class="bar-v" style="color:var(--purple)">2</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank">walego.co/blog/linkedin-engagement-strategy</a></div><div class="bar-t"><div class="bar-f" style="width:40%;background:var(--purple)"></div></div><div class="bar-v" style="color:var(--purple)">2</div></div>
+    <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank">walego.co/blog/linkedin-sales-navigator-guide</a></div><div class="bar-t"><div class="bar-f" style="width:20%;background:var(--amber)"></div></div><div class="bar-v" style="color:var(--amber)">1</div></div>
+    <div class="bar"><div class="bar-l" style="color:var(--red)">5 posts = ZERO outbound</div><div class="bar-t"><div class="bar-f" style="width:3%;background:var(--red)"></div></div><div class="bar-v" style="color:var(--red)">0</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ====== BEFORE / AFTER COMPARISON ====== -->
+<div class="section-title"><span class="dot" style="background:var(--purple)"></span> Blog Structure — Before &amp; After</div>
+
+<div class="split">
+
+<!-- ========== LEFT: BEFORE ========== -->
+<div class="split-col">
+<div class="split-title"><span class="dot" style="background:var(--red)"></span> <span style="color:var(--red)">BEFORE</span> <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:4px">— current state, no hierarchy</span></div>
+
+<p style="font-size:10px;color:var(--dim);margin-bottom:14px">All 13 posts treated as equals. No pillar/cluster structure. 3 orphans. Thin content flagged.</p>
+
+<div class="pillar-group">
+<div class="pillar-group-title">Group 1 — LinkedIn Prospecting (all flat, no hierarchy)</div>
+<div class="node node-pillar"><div class="node-name">linkedin-prospecting-strategy</div><span class="act act-keep">PILLAR ✓</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank">walego.co/blog/linkedin-prospecting-strategy</a></div><div class="node-meta">~4,800 words · 13 H2s · strong pillar</div></div>
+<div class="node node-pillar"><div class="node-name">linkedin-sales-navigator-guide</div><span class="act act-keep">PILLAR ✓</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank">walego.co/blog/linkedin-sales-navigator-guide</a></div><div class="node-meta">~3,700 words · 18 H2s · no ToC</div></div>
+<div class="node node-pillar"><div class="node-name">linkedin-profile-optimization</div><span class="act act-keep">PILLAR ✓</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank">walego.co/blog/linkedin-profile-optimization</a></div><div class="node-meta">~2,600 words · 14 H2s · has ToC</div></div>
+<div class="node node-cluster"><div class="node-name">personalize-linkedin-outreach-scale</div><span class="act act-expand">CLUSTER</span><div style="width:100%"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank">walego.co/blog/personalize-linkedin-outreach-scale</a></div><div class="node-meta">~2,100 words · product-heavy · narrow angle</div></div>
+<div class="node node-cluster"><div class="node-name">linkedin-engagement-strategy</div><span class="act act-expand">CLUSTER</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank">walego.co/blog/linkedin-engagement-strategy</a></div><div class="node-meta">~1,990 words · 14 H2s but avg 130 words each · thin</div></div>
+<div class="node node-cluster"><div class="node-name">36%-response-rate-breakdown</div><span class="act act-expand">CLUSTER</span><div style="width:100%"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank">walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown</a></div><div class="node-meta">~2,300 words · case study · narrow by design</div></div>
+<div class="node node-cluster"><div class="node-name">multi-account-prospecting-strategy</div><span class="act act-expand">CLUSTER</span><div style="width:100%"><a href="https://walego.co/blog/multi-account-prospecting-strategy" target="_blank">walego.co/blog/multi-account-prospecting-strategy</a></div><div class="node-meta">~2,500 words · single tactic · 0 outbound links</div></div>
+</div>
+
+<div class="pillar-group">
+<div class="pillar-group-title">Group 2 — B2B Lead Gen (flat)</div>
+<div class="node node-pillar"><div class="node-name">scalable-b2b-lead-generation-system</div><span class="act act-toc">BORDERLINE</span><div style="width:100%"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank">walego.co/blog/scalable-b2b-lead-generation-system</a></div><div class="node-meta">~4,500 words · 10 H2s · needs ToC + restructure</div></div>
+</div>
+
+<div class="pillar-group">
+<div class="pillar-group-title">Group 3 — Tools (isolated, no inbound)</div>
+<div class="node node-cluster"><div class="node-name">best-linkedin-automation-tools</div><span class="act act-expand">CLUSTER</span><div style="width:100%"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank">walego.co/blog/best-linkedin-automation-tools</a></div><div class="node-meta">~2,600 words · listicle/comparison · 0 inbound</div></div>
+<div class="node node-cluster"><div class="node-name">best-linkedin-prospecting-tools-2026</div><span class="act act-fix">THIN</span><div style="width:100%"><a href="https://walego.co/blog/best-linkedin-prospecting-tools-2026" target="_blank">walego.co/blog/best-linkedin-prospecting-tools-2026</a></div><div class="node-meta">~800-1,300 words · 5 H2s · mostly data cards · very thin</div></div>
+</div>
+
+<div class="pillar-group">
+<div class="pillar-group-title" style="color:var(--red)">Orphaned — 0 links in or out</div>
+<div class="node node-orphan"><div class="node-name">sales-leaders-resources</div><span class="act act-fix">ORPHAN</span><div style="width:100%"><a href="https://walego.co/blog/sales-leaders-resources" target="_blank">walego.co/blog/sales-leaders-resources</a></div><div class="node-meta">~1,780 words · resource roundup · no depth</div></div>
+<div class="node node-orphan"><div class="node-name">staying-competitive-automation-tools</div><span class="act act-fix">ORPHAN</span><div style="width:100%"><a href="https://walego.co/blog/staying-competitive-automation-tools" target="_blank">walego.co/blog/staying-competitive-automation-tools</a></div><div class="node-meta">~1,200 words · opinion piece · very thin</div></div>
+<div class="node node-orphan"><div class="node-name">ai-sales-tools-for-startups</div><span class="act act-fix">ORPHAN</span><div style="width:100%"><a href="https://walego.co/blog/ai-sales-tools-for-startups" target="_blank">walego.co/blog/ai-sales-tools-for-startups</a></div><div class="node-meta">~1,090 words · very thin · risk of Google thin content flag</div></div>
+</div>
+
+<div style="margin-top:14px;padding:10px;background:var(--red-bg);border-radius:6px;font-size:10px;color:var(--red);font-weight:600">
+  Problems: No pillar/cluster hierarchy · 3 orphans · 5 thin posts · 2 isolated pillars · 0 ToC on best content
+</div>
+</div>
+
+<!-- ========== RIGHT: AFTER ========== -->
+<div class="split-col">
+<div class="split-title"><span class="dot" style="background:var(--green)"></span> <span style="color:var(--green)">AFTER</span> <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:4px">— suggested structure · every page = LinkedIn outreach</span></div>
+
+<p style="font-size:10px;color:var(--dim);margin-bottom:14px">2 pillars. Every cluster directly supports LinkedIn outreach. Off-topic posts rewritten. Profile &amp; Sales Nav demoted to clusters with outreach angle.</p>
+
+<!-- PILLAR 1: LinkedIn Outreach Strategy -->
+<div class="pillar-group">
+<div class="pillar-group-title" style="color:var(--purple)">Pillar 1 — LinkedIn Outreach Strategy</div>
+<div class="node node-pillar"><div class="node-name">linkedin-prospecting-strategy</div><span class="act act-toc">+ ADD TOC</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank">walego.co/blog/linkedin-prospecting-strategy</a></div><div class="node-meta">PILLAR · ~4,800 words · add Table of Contents</div></div>
+<div class="node node-cluster"><div class="node-name">↳ personalize-linkedin-outreach-scale</div><span class="act act-keep">KEEP</span><div style="width:100%"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank">walego.co/blog/personalize-linkedin-outreach-scale</a></div><div class="node-meta">How to personalize outreach at scale · directly on-topic</div></div>
+<div class="node node-cluster"><div class="node-name">↳ linkedin-engagement-strategy</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank">walego.co/blog/linkedin-engagement-strategy</a></div><div class="node-meta">Reframe as "How to Warm Up Prospects Before Cold Outreach"</div></div>
+<div class="node node-cluster"><div class="node-name">↳ 36%-response-rate-breakdown</div><span class="act act-keep">KEEP</span><div style="width:100%"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank">walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown</a></div><div class="node-meta">Outreach case study · proves the strategy works</div></div>
+<div class="node node-cluster"><div class="node-name">↳ multi-account-prospecting-strategy</div><span class="act act-fix">+ LINKS</span><div style="width:100%"><a href="https://walego.co/blog/multi-account-prospecting-strategy" target="_blank">walego.co/blog/multi-account-prospecting-strategy</a></div><div class="node-meta">Scaling outreach across accounts · add links back to pillar</div></div>
+<div class="node node-cluster" style="border-color:var(--amber)"><div class="node-name">↳ linkedin-profile-optimization</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank">walego.co/blog/linkedin-profile-optimization</a></div><div class="node-meta">Was pillar · demote to cluster · reframe as "Optimize Your Profile So Outreach Gets Accepted"</div></div>
+<div class="node node-cluster" style="border-color:var(--amber)"><div class="node-name">↳ linkedin-sales-navigator-guide</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank">walego.co/blog/linkedin-sales-navigator-guide</a></div><div class="node-meta">Was pillar · demote to cluster · reframe as "Using Sales Nav to Build Outreach Target Lists"</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-prospecting-message-templates</div><span class="act act-add">CREATE</span><div class="node-meta">Outreach message templates that get replies · all 3 competitors have this</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-prospecting-connection-request-limits</div><span class="act act-add">CREATE</span><div class="node-meta">Daily outreach limits &amp; how to avoid restrictions · all 3 competitors</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-outreach-inmail-guide</div><span class="act act-add">CREATE</span><div class="node-meta">When to use InMail vs connection request in outreach · all 3 competitors</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-outreach-follow-up-sequence</div><span class="act act-add">CREATE</span><div class="node-meta">Follow-up cadence: how many touches before you stop · Lemlist + Waalaxy</div></div>
+</div>
+
+<!-- PILLAR 2: Scalable LinkedIn Outreach System -->
+<div class="pillar-group">
+<div class="pillar-group-title" style="color:var(--purple)">Pillar 2 — Building a Scalable LinkedIn Outreach System</div>
+<div class="node node-pillar"><div class="node-name">scalable-b2b-lead-generation-system</div><span class="act act-toc">+ ADD TOC</span><div style="width:100%"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank">walego.co/blog/scalable-b2b-lead-generation-system</a></div><div class="node-meta">PILLAR · ~4,500 words · add ToC + restructure around outreach</div></div>
+<div class="node node-cluster"><div class="node-name">↳ best-linkedin-automation-tools</div><span class="act act-keep">KEEP</span><div style="width:100%"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank">walego.co/blog/best-linkedin-automation-tools</a></div><div class="node-meta">Outreach automation tool comparison · link back to pillar</div></div>
+<div class="node node-cluster"><div class="node-name">↳ best-linkedin-prospecting-tools-2026</div><span class="act act-expand">EXPAND</span><div style="width:100%"><a href="https://walego.co/blog/best-linkedin-prospecting-tools-2026" target="_blank">walego.co/blog/best-linkedin-prospecting-tools-2026</a></div><div class="node-meta">Very thin (~800w) · expand to 2,000+ · focus on outreach tool stack</div></div>
+<div class="node node-cluster" style="border-color:var(--amber)"><div class="node-name">↳ ai-sales-tools-for-startups</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/ai-sales-tools-for-startups" target="_blank">walego.co/blog/ai-sales-tools-for-startups</a></div><div class="node-meta">Off-topic · rewrite as "LinkedIn Automation for Startups: First 50 Customers Without an SDR"</div></div>
+<div class="node node-cluster" style="border-color:var(--amber)"><div class="node-name">↳ staying-competitive-automation-tools</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/staying-competitive-automation-tools" target="_blank">walego.co/blog/staying-competitive-automation-tools</a></div><div class="node-meta">Off-topic · rewrite as "LinkedIn Automation ROI: How to Measure If Outreach Is Working"</div></div>
+<div class="node node-cluster" style="border-color:var(--amber)"><div class="node-name">↳ sales-leaders-resources</div><span class="act act-expand">REWRITE</span><div style="width:100%"><a href="https://walego.co/blog/sales-leaders-resources" target="_blank">walego.co/blog/sales-leaders-resources</a></div><div class="node-meta">Off-topic · rewrite as "LinkedIn Outreach Playbook for Sales Leaders"</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: b2b-lead-generation-define-icp</div><span class="act act-add">CREATE</span><div class="node-meta">How to define your ICP for LinkedIn outreach targeting</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-automation-safety-guide</div><span class="act act-add">CREATE</span><div class="node-meta">How to avoid account restrictions during outreach · all 3 competitors</div></div>
+<div class="node node-new"><div class="node-name">↳ NEW: linkedin-automation-drip-campaigns</div><span class="act act-add">CREATE</span><div class="node-meta">Automated outreach sequences: drip campaign setup · Waalaxy + HeyReach</div></div>
+</div>
+
+<div style="margin-top:14px;padding:10px;background:var(--green-bg);border-radius:6px;font-size:10px;color:var(--green);font-weight:600">
+  Result: 2 pillars · 11 clusters · 0 orphans · every page tied to LinkedIn outreach · 7 new articles to write
+</div>
+
+<!-- Action summary -->
+<div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:6px;font-size:10px">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--text)">This Week's Actions:</div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <span class="act act-toc">ADD TOC × 2</span>
+    <span class="act act-expand">REWRITE × 5</span>
+    <span class="act act-expand">EXPAND × 1</span>
+    <span class="act act-fix">FIX LINKS × 1</span>
+    <span class="act act-add">CREATE × 7</span>
+  </div>
+</div>
+</div>
+
+</div><!-- end split -->
+
+<div class="divider"></div>
+
+<!-- ====== URL SLUG STRUCTURE DIAGRAM ====== -->
+<div class="section-title"><span class="dot" style="background:var(--cyan)"></span> URL Slug Strategy — Keyword-Anchored Naming</div>
+<p style="font-size:11px;color:var(--dim);margin:-8px 0 14px">Every new cluster slug starts with its pillar's keyword root. This visually groups URLs and reinforces topical relevance for Google.</p>
+
+<div class="split">
+
+<div class="split-col">
+<div class="split-title"><span class="dot" style="background:var(--red)"></span> <span style="color:var(--red)">BEFORE</span> <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:4px">— random slug naming</span></div>
+<div style="font-family:monospace;font-size:11px;line-height:2.2;padding:8px 0">
+<div style="color:var(--dim)">/blog/</div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank" style="color:var(--purple)">linkedin-prospecting-strategy</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank" style="color:var(--text)">personalize-linkedin-outreach-scale</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank" style="color:var(--text)">linkedin-engagement-strategy</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank" style="color:var(--text)">36-percent-response-rate-outbound-campaign-breakdown</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/multi-account-prospecting-strategy" target="_blank" style="color:var(--text)">multi-account-prospecting-strategy</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank" style="color:var(--purple)">linkedin-sales-navigator-guide</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank" style="color:var(--text)">best-linkedin-automation-tools</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/best-linkedin-prospecting-tools-2026" target="_blank" style="color:var(--text)">best-linkedin-prospecting-tools-2026</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank" style="color:var(--purple)">linkedin-profile-optimization</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank" style="color:var(--purple)">scalable-b2b-lead-generation-system</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/ai-sales-tools-for-startups" target="_blank" style="color:var(--red)">ai-sales-tools-for-startups</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/staying-competitive-automation-tools" target="_blank" style="color:var(--red)">staying-competitive-automation-tools</a></div>
+<div style="padding-left:12px"><a href="https://walego.co/blog/sales-leaders-resources" target="_blank" style="color:var(--red)">sales-leaders-resources</a></div>
+</div>
+<div style="margin-top:8px;padding:8px;background:var(--red-bg);border-radius:6px;font-size:10px;color:var(--red);font-weight:600">No shared keyword root between pillar &amp; cluster slugs. Can't tell which pages belong together from the URL alone.</div>
+</div>
+
+<div class="split-col">
+<div class="split-title"><span class="dot" style="background:var(--green)"></span> <span style="color:var(--green)">AFTER</span> <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:4px">— keyword-anchored slugs</span></div>
+<div style="font-family:monospace;font-size:11px;line-height:2.2;padding:8px 0">
+<div style="color:var(--dim)">/blog/</div>
+
+<div style="padding-left:12px;color:var(--purple);font-weight:700"><a href="https://walego.co/blog/linkedin-prospecting-strategy" target="_blank" style="color:var(--purple)"><span style="background:rgba(139,92,246,.15);padding:1px 4px;border-radius:3px">linkedin-prospecting</span>-strategy</a> <span class="act act-toc" style="font-family:sans-serif">+ TOC</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/personalize-linkedin-outreach-scale" target="_blank" style="color:var(--text)">personalize-linkedin-outreach-scale</a> <span class="act act-keep" style="font-family:sans-serif">KEEP</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/linkedin-engagement-strategy" target="_blank" style="color:var(--amber)">linkedin-engagement-strategy</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/36-percent-response-rate-outbound-campaign-breakdown" target="_blank" style="color:var(--text)">36%-response-rate-breakdown</a> <span class="act act-keep" style="font-family:sans-serif">KEEP</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/multi-account-prospecting-strategy" target="_blank" style="color:var(--text)">multi-account-prospecting-strategy</a> <span class="act act-fix" style="font-family:sans-serif">+ LINKS</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank" style="color:var(--amber)">linkedin-profile-optimization</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/linkedin-sales-navigator-guide" target="_blank" style="color:var(--amber)">linkedin-sales-navigator-guide</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-prospecting</span>-message-templates <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-prospecting</span>-connection-request-limits <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-outreach</span>-inmail-guide <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-outreach</span>-follow-up-sequence <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+
+<div style="padding-left:12px;color:var(--purple);font-weight:700;margin-top:6px"><a href="https://walego.co/blog/scalable-b2b-lead-generation-system" target="_blank" style="color:var(--purple)"><span style="background:rgba(139,92,246,.15);padding:1px 4px;border-radius:3px">b2b-lead-generation</span>-system</a> <span class="act act-toc" style="font-family:sans-serif">+ TOC</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank" style="color:var(--text)">best-linkedin-automation-tools</a> <span class="act act-keep" style="font-family:sans-serif">KEEP</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/best-linkedin-prospecting-tools-2026" target="_blank" style="color:var(--text)">best-linkedin-prospecting-tools-2026</a> <span class="act act-expand" style="font-family:sans-serif">EXPAND</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/ai-sales-tools-for-startups" target="_blank" style="color:var(--amber)">ai-sales-tools-for-startups</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/staying-competitive-automation-tools" target="_blank" style="color:var(--amber)">staying-competitive-automation-tools</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px"><a href="https://walego.co/blog/sales-leaders-resources" target="_blank" style="color:var(--amber)">sales-leaders-resources</a> <span class="act act-expand" style="font-family:sans-serif">REWRITE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">b2b-lead-generation</span>-define-icp <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-automation</span>-safety-guide <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+<div style="padding-left:32px;color:var(--cyan)"><span style="background:rgba(34,211,238,.08);padding:1px 4px;border-radius:3px">linkedin-automation</span>-drip-campaigns <span class="act act-add" style="font-family:sans-serif">CREATE</span></div>
+</div>
+<div style="margin-top:8px;padding:8px;background:var(--green-bg);border-radius:6px;font-size:10px;color:var(--green);font-weight:600">Shared keyword root per cluster. Google &amp; humans can see the hierarchy from the URL. Existing pages keep their URLs — only new pages use this pattern.</div>
+</div>
+
+</div><!-- end slug split -->
+
+<div class="divider"></div>
+
+
+
+<!-- ====== COMPETITOR GAP ANALYSIS ====== -->
+<div class="section-title"><span class="dot" style="background:var(--amber)"></span> Competitor Blog Gap Analysis — Lemlist · Waalaxy · HeyReach</div>
+<p style="font-size:11px;color:var(--dim);margin:-8px 0 14px">Topics these 3 competitors rank for on LinkedIn outreach that Walego has <strong>no content on</strong>. Filtered to LinkedIn-only topics since that's Walego's product focus. Sorted by estimated keyword volume &amp; relevance.</p>
+
+<p style="font-size:10px;color:var(--red);margin-bottom:14px;font-weight:600">⚠ Current Walego posts that are OFF-TOPIC (not LinkedIn outreach):</p>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">
+<div style="background:var(--red-bg);border:1px dashed var(--red);border-radius:6px;padding:8px 12px;font-size:10px;flex:1;min-width:200px">
+<div style="color:var(--red);font-weight:700;margin-bottom:4px">sales-leaders-resources</div>
+<div style="color:var(--dim)">Generic sales roundup. Not about LinkedIn outreach. <strong>Recommend:</strong> rewrite as "LinkedIn Outreach Resources for Sales Leaders" or redirect to pillar.</div>
+</div>
+<div style="background:var(--red-bg);border:1px dashed var(--red);border-radius:6px;padding:8px 12px;font-size:10px;flex:1;min-width:200px">
+<div style="color:var(--red);font-weight:700;margin-bottom:4px">staying-competitive-automation-tools</div>
+<div style="color:var(--dim)">Vague opinion piece about "staying competitive." Not actionable. <strong>Recommend:</strong> rewrite as "LinkedIn Automation ROI: How to Measure If It's Working"</div>
+</div>
+<div style="background:var(--red-bg);border:1px dashed var(--red);border-radius:6px;padding:8px 12px;font-size:10px;flex:1;min-width:200px">
+<div style="color:var(--red);font-weight:700;margin-bottom:4px">ai-sales-tools-for-startups</div>
+<div style="color:var(--dim)">Too broad — covers all AI sales tools, not LinkedIn. <strong>Recommend:</strong> rewrite as "LinkedIn Automation for Startups: Get First 50 Customers Without an SDR"</div>
+</div>
+</div>
+
+<!-- Competitor topic tables -->
+<div style="margin-bottom:16px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+<span style="background:var(--amber);width:8px;height:8px;border-radius:50%;display:inline-block"></span>
+<span style="font-weight:700;font-size:12px;color:var(--text)">High-Priority Gaps</span>
+<span style="font-size:10px;color:var(--dim)">— all 3 competitors have content here, Walego has zero</span>
+</div>
+
+<table style="width:100%;border-collapse:collapse;font-size:10px">
+<thead><tr style="border-bottom:1px solid var(--border)">
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Topic</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">L</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">W</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">H</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Suggested Walego Slug</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Pillar Fit</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn connection request message templates</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-outreach-connection-request-templates</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn connection request limits / weekly limits</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-connection-request-limits</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn InMail guide (how to write, when to use)</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-inmail-guide</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn automation safety / account restrictions</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-safety-guide</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn lead generation complete guide</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-lead-generation-guide</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Sales Navigator boolean search guide</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-sales-navigator-boolean-search</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Outreach Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">How to send bulk messages on LinkedIn</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-outreach-bulk-messages</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr><td style="padding:6px 8px;color:var(--text)">LinkedIn SSI score explained</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-profile-ssi-score-explained</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Outreach Strategy</td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="margin-bottom:16px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+<span style="background:var(--cyan);width:8px;height:8px;border-radius:50%;display:inline-block"></span>
+<span style="font-weight:700;font-size:12px;color:var(--text)">Medium-Priority Gaps</span>
+<span style="font-size:10px;color:var(--dim)">— 2 of 3 competitors cover these</span>
+</div>
+
+<table style="width:100%;border-collapse:collapse;font-size:10px">
+<thead><tr style="border-bottom:1px solid var(--border)">
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Topic</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">L</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">W</th>
+<th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">H</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Suggested Walego Slug</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Pillar Fit</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn follow-up message sequence / cadence</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-outreach-follow-up-sequence</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn scraping / data extraction</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-data-scraping-guide</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn voice messages for outreach</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--dim)">—</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-outreach-voice-messages</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">How to find someone's email from LinkedIn</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-find-email-address</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn social selling strategy</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-engagement-social-selling</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Outreach Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">LinkedIn drip campaigns / automated sequences</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-drip-campaigns</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Sender rotation / multi-sender outreach</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-sender-rotation</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
+<tr><td style="padding:6px 8px;color:var(--text)">LinkedIn outreach for agencies (multi-client)</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-tools-for-agencies</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="margin-bottom:16px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+<span style="background:var(--green);width:8px;height:8px;border-radius:50%;display:inline-block"></span>
+<span style="font-weight:700;font-size:12px;color:var(--text)">Comparison Posts (High-Intent Keywords)</span>
+<span style="font-size:10px;color:var(--dim)">— competitors write "X vs Y" posts to capture bottom-of-funnel traffic</span>
+</div>
+
+<table style="width:100%;border-collapse:collapse;font-size:10px">
+<thead><tr style="border-bottom:1px solid var(--border)">
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Comparison Topic</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Who Writes It</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Suggested Walego Slug</th>
+<th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Why It Matters</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs Waalaxy</td><td style="padding:6px 8px;color:var(--dim)">Waalaxy owns this</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-waalaxy</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">If you don't write it, they control the narrative</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs Expandi</td><td style="padding:6px 8px;color:var(--dim)">HeyReach has similar</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-expandi</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">Expandi is the #1 competitor in search</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs HeyReach</td><td style="padding:6px 8px;color:var(--dim)">HeyReach owns this</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-heyreach</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">Direct competitor for multi-account</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs Lemlist</td><td style="padding:6px 8px;color:var(--dim)">Lemlist owns this</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-lemlist</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">Lemlist is multichannel — Walego is LinkedIn-only (advantage)</td></tr>
+<tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs Dripify</td><td style="padding:6px 8px;color:var(--dim)">HeyReach writes it</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-dripify</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">High search volume "dripify alternative"</td></tr>
+<tr><td style="padding:6px 8px;color:var(--text)">Best LinkedIn automation tools [year]</td><td style="padding:6px 8px;color:var(--dim)">All 3 competitors</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-best-tools-2026</code></td><td style="padding:6px 8px;color:var(--green);font-size:9px">Walego already has this — update &amp; expand</td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="margin-top:14px;padding:12px;background:var(--card2);border-radius:8px;font-size:10px">
+<div style="font-weight:700;color:var(--text);margin-bottom:6px">Key Takeaway:</div>
+<div style="color:var(--dim);line-height:1.6">
+<strong style="color:var(--amber)">L</strong> = Lemlist (200+ blog posts, multichannel focus but strong LinkedIn content) ·
+<strong style="color:var(--amber)">W</strong> = Waalaxy (100+ posts, LinkedIn-first like Walego) ·
+<strong style="color:var(--amber)">H</strong> = HeyReach (50+ posts, multi-account LinkedIn focus, closest competitor to Walego)<br><br>
+Walego has <strong style="color:var(--red)">0 comparison posts</strong> — this is the biggest gap. Comparison keywords ("X vs Y", "best tools", "alternatives") carry the highest purchase intent. Every competitor writes these; Walego should own its own comparisons.<br><br>
+The 3 off-topic posts (<span style="color:var(--red)">sales-leaders-resources, staying-competitive, ai-sales-tools</span>) should be rewritten with a LinkedIn outreach angle or redirected to relevant pillars. Every page on walego.co/blog should answer: <em>"How does this help someone do LinkedIn outreach better?"</em>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ====== BLOG-ONLY ISSUES ====== -->
+<div class="section-title"><span class="dot" style="background:var(--red)"></span> Blog SEO Issues</div>
+
+<div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:8px">CRITICAL</div>
+<div class="issue c"><span class="issue-n c">1</span><div><div class="issue-t">No article-specific OG images</div><div class="issue-d">All 13 blog posts use generic Walego logo. Hurts social CTR.</div></div></div>
+<div class="issue c"><span class="issue-n c">2</span><div><div class="issue-t">Article schema missing image property</div><div class="issue-d">Required for Article rich results. None of 13 posts have it.</div></div></div>
+<div class="issue c"><span class="issue-n c">3</span><div><div class="issue-t">No Organization schema defined</div><div class="issue-d">Blog articles reference #organization but it's never defined. Broken JSON-LD.</div></div></div>
+
+<div style="font-size:11px;font-weight:600;color:var(--amber);margin:16px 0 8px">HIGH</div>
+<div class="issue h"><span class="issue-n h">4</span><div><div class="issue-t"><a href="https://walego.co/blog/best-linkedin-automation-tools" target="_blank">walego.co/blog/best-linkedin-automation-tools</a> — ZERO inbound blog links</div></div></div>
+<div class="issue h"><span class="issue-n h">5</span><div><div class="issue-t"><a href="https://walego.co/blog/best-linkedin-prospecting-tools-2026" target="_blank">walego.co/blog/best-linkedin-prospecting-tools-2026</a> — completely isolated (0 in, 0 out)</div></div></div>
+<div class="issue h"><span class="issue-n h">6</span><div><div class="issue-t">3 orphaned pillars — zero links in, zero links out: <a href="https://walego.co/blog/sales-leaders-resources" target="_blank">sales-leaders-resources</a>, <a href="https://walego.co/blog/staying-competitive-automation-tools" target="_blank">staying-competitive</a>, <a href="https://walego.co/blog/ai-sales-tools-for-startups" target="_blank">ai-sales-tools</a></div></div></div>
+
+<div style="font-size:11px;font-weight:600;color:var(--cyan);margin:16px 0 8px">MEDIUM</div>
+<div class="issue m"><span class="issue-n m">7</span><div><div class="issue-t">No featured images on any blog post</div></div></div>
+<div class="issue m"><span class="issue-n m">8</span><div><div class="issue-t">Blog listing dates show 2025, actual pages say 2026</div></div></div>
+<div class="issue m"><span class="issue-n m">9</span><div><div class="issue-t">dateModified always equals datePublished in schema</div></div></div>
+<div class="issue m"><span class="issue-n m">10</span><div><div class="issue-t">No blog categories or tag pages</div></div></div>
+<div class="issue m"><span class="issue-n m">11</span><div><div class="issue-t">6 blog posts lack custom OpenGraph metadata</div></div></div>
+<div class="issue m"><span class="issue-n m">12</span><div><div class="issue-t">/blog index has no CollectionPage schema</div></div></div>
+
+<div style="margin-top:36px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--dim)">
+  Walego Blog Audit &middot; 2 pillars &middot; 11 clusters &middot; 7 new to write &middot; 12 issues &middot; May 2026
+</div>
+
+</div>
+</body>
+</html>
