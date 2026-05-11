@@ -16,6 +16,32 @@
   .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
   .g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
   @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.g5{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:600px){
+    .wrap{padding:16px 10px}
+    h1{font-size:18px}
+    .g5{grid-template-columns:repeat(2,1fr);gap:6px}
+    .stat-n{font-size:28px}
+    .stat-box{padding:10px 6px}
+    .bar-l{width:120px;font-size:9px}
+    .bar-l a{font-size:8px}
+    .bar-v{font-size:10px}
+    .bar-t{height:18px}
+    .section-title{font-size:13px}
+    .split-col{padding:12px 10px}
+    .split-title{font-size:12px}
+    .node{padding:8px 10px;font-size:10px}
+    .node-cluster,.node-new{margin-left:12px}
+    .node-name{font-size:10px}
+    .node-meta{font-size:8px}
+    .act{font-size:8px;padding:1px 4px}
+    table{font-size:9px}
+    table th,table td{padding:4px 4px!important}
+    code{font-size:7px!important;word-break:break-all}
+    .pillar-group-title{font-size:9px}
+    .card{padding:12px 10px}
+    .card-title{font-size:10px}
+    svg{max-width:140px!important}
+  }
   .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:hidden}
   .card-title{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
   .stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
@@ -88,6 +114,15 @@
   .pillar-group-title{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-left:2px}
   .connector{width:24px;display:flex;justify-content:center;position:relative}
   .connector::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--border)}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .table-scroll table{min-width:580px}
+  @media(max-width:600px){
+    .split-col [style*="font-family:monospace"]{font-size:9px!important;line-height:1.9!important;word-break:break-all}
+    .split-col [style*="padding-left:32px"]{padding-left:16px!important}
+    .issue{font-size:11px;padding:8px 10px}
+    .issue-t{font-size:11px}
+    .issue-d{font-size:10px}
+  }
 </style>
 </head>
 <body>
@@ -381,7 +416,7 @@
 <span style="font-size:10px;color:var(--dim)">— all 3 competitors have content here, Walego has zero</span>
 </div>
 
-<table style="width:100%;border-collapse:collapse;font-size:10px">
+<div class="table-scroll"><table style="width:100%;border-collapse:collapse;font-size:10px">
 <thead><tr style="border-bottom:1px solid var(--border)">
 <th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Topic</th>
 <th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">L</th>
@@ -400,7 +435,7 @@
 <tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">How to send bulk messages on LinkedIn</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-outreach-bulk-messages</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Prospecting Strategy</td></tr>
 <tr><td style="padding:6px 8px;color:var(--text)">LinkedIn SSI score explained</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--green)">✓</td><td style="text-align:center;color:var(--dim)">—</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-profile-ssi-score-explained</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Outreach Strategy</td></tr>
 </tbody>
-</table>
+</table></div>
 </div>
 
 <div style="margin-bottom:16px">
@@ -410,7 +445,7 @@
 <span style="font-size:10px;color:var(--dim)">— 2 of 3 competitors cover these</span>
 </div>
 
-<table style="width:100%;border-collapse:collapse;font-size:10px">
+<div class="table-scroll"><table style="width:100%;border-collapse:collapse;font-size:10px">
 <thead><tr style="border-bottom:1px solid var(--border)">
 <th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Topic</th>
 <th style="text-align:center;padding:6px 4px;color:var(--dim);font-weight:600;width:28px">L</th>
@@ -429,7 +464,7 @@
 <tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Sender rotation / multi-sender outreach</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-sender-rotation</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
 <tr><td style="padding:6px 8px;color:var(--text)">LinkedIn outreach for agencies (multi-client)</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--dim)">—</td><td style="text-align:center;color:var(--green)">✓</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-prospecting-tools-for-agencies</code></td><td style="padding:6px 8px;color:var(--purple);font-size:9px">Scalable Outreach System</td></tr>
 </tbody>
-</table>
+</table></div>
 </div>
 
 <div style="margin-bottom:16px">
@@ -439,7 +474,7 @@
 <span style="font-size:10px;color:var(--dim)">— competitors write "X vs Y" posts to capture bottom-of-funnel traffic</span>
 </div>
 
-<table style="width:100%;border-collapse:collapse;font-size:10px">
+<div class="table-scroll"><table style="width:100%;border-collapse:collapse;font-size:10px">
 <thead><tr style="border-bottom:1px solid var(--border)">
 <th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Comparison Topic</th>
 <th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:600">Who Writes It</th>
@@ -454,7 +489,7 @@
 <tr style="border-bottom:1px solid var(--card2)"><td style="padding:6px 8px;color:var(--text)">Walego vs Dripify</td><td style="padding:6px 8px;color:var(--dim)">HeyReach writes it</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-walego-vs-dripify</code></td><td style="padding:6px 8px;color:var(--amber);font-size:9px">High search volume "dripify alternative"</td></tr>
 <tr><td style="padding:6px 8px;color:var(--text)">Best LinkedIn automation tools [year]</td><td style="padding:6px 8px;color:var(--dim)">All 3 competitors</td><td style="padding:6px 8px"><code style="background:var(--card2);padding:1px 4px;border-radius:3px;color:var(--cyan);font-size:9px">linkedin-automation-best-tools-2026</code></td><td style="padding:6px 8px;color:var(--green);font-size:9px">Walego already has this — update &amp; expand</td></tr>
 </tbody>
-</table>
+</table></div>
 </div>
 
 <div style="margin-top:14px;padding:12px;background:var(--card2);border-radius:8px;font-size:10px">
