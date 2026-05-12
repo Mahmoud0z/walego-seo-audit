@@ -611,7 +611,7 @@ The 3 off-topic posts (<span style="color:var(--red)">sales-leaders-resources, s
 
   // ── Animated stat counters ──
   function animateCount(el, target){
-    var start=0, dur=1200, startTime=null;
+    var dur=1200, startTime=null;
     function step(ts){
       if(!startTime) startTime=ts;
       var p=Math.min((ts-startTime)/dur,1);
@@ -622,20 +622,21 @@ The 3 off-topic posts (<span style="color:var(--red)">sales-leaders-resources, s
     requestAnimationFrame(step);
   }
   var statNums=document.querySelectorAll('.stat-n');
+  // Store original values first, then zero them out
+  statNums.forEach(function(el){
+    el.setAttribute('data-target',el.textContent.trim());
+    el.textContent='0';
+  });
   var statObs=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){
-        var val=parseInt(e.target.textContent);
+        var val=parseInt(e.target.getAttribute('data-target'));
         if(!isNaN(val)&&val>0) animateCount(e.target,val);
         statObs.unobserve(e.target);
       }
     });
   },{threshold:0.5});
-  statNums.forEach(function(el){
-    el.setAttribute('data-target',el.textContent);
-    el.textContent='0';
-    statObs.observe(el);
-  });
+  statNums.forEach(function(el){statObs.observe(el)});
 
   // ── Animated bar widths ──
   var bars=document.querySelectorAll('.bar-f');
