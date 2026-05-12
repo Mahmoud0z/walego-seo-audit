@@ -123,6 +123,58 @@
     .issue-t{font-size:11px}
     .issue-d{font-size:10px}
   }
+
+  /* ===== INTERACTIVE ENHANCEMENTS ===== */
+
+  /* Scroll-reveal fade-in */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* Card hover lift */
+  .card,.stat-box,.issue,.split-col,.tree-group,.node{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+  .card:hover,.stat-box:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .split-col:hover{box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  .issue:hover{transform:translateX(4px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  .node:hover{border-color:var(--purple);box-shadow:0 2px 10px rgba(139,92,246,.15)}
+  .node-new:hover{border-color:var(--cyan);box-shadow:0 2px 10px rgba(34,211,238,.15)}
+
+  /* Bar hover */
+  .bar{transition:transform .15s ease}
+  .bar:hover{transform:translateX(4px)}
+  .bar:hover .bar-l{color:var(--text)}
+  .bar-f{transition:width .8s cubic-bezier(.25,.46,.45,.94)}
+
+  /* Donut chart SVG hover */
+  .card svg circle{transition:stroke-width .25s ease,opacity .25s ease}
+  .card svg:hover circle{stroke-width:26}
+
+  /* Collapsible table toggle */
+  .table-toggle{cursor:pointer;user-select:none;transition:background .15s ease}
+  .table-toggle:hover{background:var(--card2);border-radius:6px}
+  .table-toggle .toggle-icon{display:inline-block;transition:transform .25s ease;margin-left:6px;font-size:10px;color:var(--dim)}
+  .table-toggle.collapsed .toggle-icon{transform:rotate(-90deg)}
+
+  /* Back-to-top button */
+  .btt{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--purple);color:white;border:none;font-size:20px;cursor:pointer;opacity:0;transform:translateY(16px);transition:opacity .3s ease,transform .3s ease,background .2s ease;z-index:999;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(139,92,246,.4)}
+  .btt.show{opacity:1;transform:translateY(0)}
+  .btt:hover{background:#7c3aed;transform:translateY(-2px)}
+
+  /* Smooth anchor scrolling */
+  html{scroll-behavior:smooth}
+
+  /* Sticky section nav dots */
+  .section-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:998}
+  .section-nav a{width:8px;height:8px;border-radius:50%;background:var(--border);display:block;transition:background .2s ease,transform .2s ease}
+  .section-nav a.active{background:var(--purple);transform:scale(1.4)}
+  .section-nav a:hover{background:var(--purple)}
+  @media(max-width:600px){.section-nav{display:none}.btt{width:36px;height:36px;bottom:16px;right:16px;font-size:16px}}
+
+  /* Table row hover */
+  table tbody tr{transition:background .15s ease}
+  table tbody tr:hover{background:var(--card2)!important}
+
+  /* Animated bar widths — start at 0 */
+  .bar-f.animate-bar{width:0!important}
 </style>
 </head>
 <body>
@@ -132,7 +184,7 @@
 <p class="sub">2 pillars &middot; 11 clusters &middot; 5 rewrites &middot; 7 new articles to write &middot; every page = LinkedIn outreach &middot; May 2026</p>
 
 <!-- ====== STATS ====== -->
-<div class="g5" style="margin-bottom:20px">
+<div id="sec-overview" class="g5 reveal" style="margin-bottom:20px">
   <div class="stat-box"><div class="stat-n" style="color:var(--purple)">2</div><div class="stat-l">True Pillars</div></div>
   <div class="stat-box"><div class="stat-n" style="color:var(--cyan)">11</div><div class="stat-l">Cluster Posts</div></div>
   <div class="stat-box"><div class="stat-n" style="color:var(--green)">0</div><div class="stat-l">Orphaned</div></div>
@@ -141,7 +193,7 @@
 </div>
 
 <!-- ====== CHARTS ====== -->
-<div class="g3" style="margin-bottom:20px">
+<div id="sec-charts" class="g3 reveal" style="margin-bottom:20px">
   <!-- Blog Link Health -->
   <div class="card">
     <div class="card-title">Blog Link Health</div>
@@ -194,7 +246,7 @@
 </div>
 
 <!-- ====== INBOUND / OUTBOUND CHARTS ====== -->
-<div class="g2" style="margin-bottom:20px">
+<div id="sec-links" class="g2 reveal" style="margin-bottom:20px">
   <div class="card">
     <div class="card-title">&#8592; Inbound Links (blog-to-blog only)</div>
     <div class="bar"><div class="bar-l"><a href="https://walego.co/blog/linkedin-profile-optimization" target="_blank">walego.co/blog/linkedin-profile-optimization</a></div><div class="bar-t"><div class="bar-f" style="width:100%;background:var(--green)"></div></div><div class="bar-v" style="color:var(--green)">5</div></div>
@@ -224,9 +276,9 @@
 <div class="divider"></div>
 
 <!-- ====== BEFORE / AFTER COMPARISON ====== -->
-<div class="section-title"><span class="dot" style="background:var(--purple)"></span> Blog Structure — Before &amp; After</div>
+<div id="sec-structure" class="section-title reveal"><span class="dot" style="background:var(--purple)"></span> Blog Structure — Before &amp; After</div>
 
-<div class="split">
+<div class="split reveal">
 
 <!-- ========== LEFT: BEFORE ========== -->
 <div class="split-col">
@@ -326,10 +378,10 @@
 <div class="divider"></div>
 
 <!-- ====== URL SLUG STRUCTURE DIAGRAM ====== -->
-<div class="section-title"><span class="dot" style="background:var(--cyan)"></span> URL Slug Strategy — Keyword-Anchored Naming</div>
+<div id="sec-slugs" class="section-title reveal"><span class="dot" style="background:var(--cyan)"></span> URL Slug Strategy — Keyword-Anchored Naming</div>
 <p style="font-size:11px;color:var(--dim);margin:-8px 0 14px">Every new cluster slug starts with its pillar's keyword root. This visually groups URLs and reinforces topical relevance for Google.</p>
 
-<div class="split">
+<div class="split reveal">
 
 <div class="split-col">
 <div class="split-title"><span class="dot" style="background:var(--red)"></span> <span style="color:var(--red)">BEFORE</span> <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:4px">— random slug naming</span></div>
@@ -389,11 +441,11 @@
 
 
 <!-- ====== COMPETITOR GAP ANALYSIS ====== -->
-<div class="section-title"><span class="dot" style="background:var(--amber)"></span> Competitor Blog Gap Analysis — Lemlist · Waalaxy · HeyReach</div>
+<div id="sec-competitors" class="section-title reveal"><span class="dot" style="background:var(--amber)"></span> Competitor Blog Gap Analysis — Lemlist · Waalaxy · HeyReach</div>
 <p style="font-size:11px;color:var(--dim);margin:-8px 0 14px">Topics these 3 competitors rank for on LinkedIn outreach that Walego has <strong>no content on</strong>. Filtered to LinkedIn-only topics since that's Walego's product focus. Sorted by estimated keyword volume &amp; relevance.</p>
 
-<p style="font-size:10px;color:var(--red);margin-bottom:14px;font-weight:600">⚠ Current Walego posts that are OFF-TOPIC (not LinkedIn outreach):</p>
-<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">
+<p class="reveal" style="font-size:10px;color:var(--red);margin-bottom:14px;font-weight:600">⚠ Current Walego posts that are OFF-TOPIC (not LinkedIn outreach):</p>
+<div class="reveal" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">
 <div style="background:var(--red-bg);border:1px dashed var(--red);border-radius:6px;padding:8px 12px;font-size:10px;flex:1;min-width:200px">
 <div style="color:var(--red);font-weight:700;margin-bottom:4px">sales-leaders-resources</div>
 <div style="color:var(--dim)">Generic sales roundup. Not about LinkedIn outreach. <strong>Recommend:</strong> rewrite as "LinkedIn Outreach Resources for Sales Leaders" or redirect to pillar.</div>
@@ -506,7 +558,7 @@ The 3 off-topic posts (<span style="color:var(--red)">sales-leaders-resources, s
 <div class="divider"></div>
 
 <!-- ====== BLOG-ONLY ISSUES ====== -->
-<div class="section-title"><span class="dot" style="background:var(--red)"></span> Blog SEO Issues</div>
+<div id="sec-issues" class="section-title reveal"><span class="dot" style="background:var(--red)"></span> Blog SEO Issues</div>
 
 <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:8px">CRITICAL</div>
 <div class="issue c"><span class="issue-n c">1</span><div><div class="issue-t">No article-specific OG images</div><div class="issue-d">All 13 blog posts use generic Walego logo. Hurts social CTR.</div></div></div>
@@ -531,5 +583,157 @@ The 3 off-topic posts (<span style="color:var(--red)">sales-leaders-resources, s
 </div>
 
 </div>
+
+<!-- Back to top button -->
+<button class="btt" onclick="window.scrollTo({top:0})" title="Back to top">↑</button>
+
+<!-- Section nav dots -->
+<nav class="section-nav">
+  <a href="#sec-overview" title="Overview"></a>
+  <a href="#sec-charts" title="Charts"></a>
+  <a href="#sec-links" title="Links"></a>
+  <a href="#sec-structure" title="Structure"></a>
+  <a href="#sec-slugs" title="Slugs"></a>
+  <a href="#sec-competitors" title="Competitors"></a>
+  <a href="#sec-issues" title="Issues"></a>
+</nav>
+
+<script>
+(function(){
+  // ── Scroll Reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+    });
+  },{threshold:0.12});
+  reveals.forEach(function(el){io.observe(el)});
+
+  // ── Animated stat counters ──
+  function animateCount(el, target){
+    var start=0, dur=1200, startTime=null;
+    function step(ts){
+      if(!startTime) startTime=ts;
+      var p=Math.min((ts-startTime)/dur,1);
+      var ease=1-Math.pow(1-p,3);
+      el.textContent=Math.round(ease*target);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var statNums=document.querySelectorAll('.stat-n');
+  var statObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var val=parseInt(e.target.textContent);
+        if(!isNaN(val)&&val>0) animateCount(e.target,val);
+        statObs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.5});
+  statNums.forEach(function(el){
+    el.setAttribute('data-target',el.textContent);
+    el.textContent='0';
+    statObs.observe(el);
+  });
+
+  // ── Animated bar widths ──
+  var bars=document.querySelectorAll('.bar-f');
+  bars.forEach(function(b){
+    var w=b.style.width;
+    b.setAttribute('data-width',w);
+    b.style.width='0';
+  });
+  var barObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var w=e.target.getAttribute('data-width');
+        setTimeout(function(){e.target.style.width=w},80);
+        barObs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.2});
+  bars.forEach(function(b){barObs.observe(b)});
+
+  // ── Animated donut charts ──
+  var donuts=document.querySelectorAll('.card svg');
+  donuts.forEach(function(svg){
+    var circles=svg.querySelectorAll('circle');
+    circles.forEach(function(c){
+      var da=c.getAttribute('stroke-dasharray');
+      c.setAttribute('data-da',da);
+      c.setAttribute('stroke-dasharray','0 500');
+      c.style.transition='stroke-dasharray 1.2s cubic-bezier(.25,.46,.45,.94)';
+    });
+  });
+  var donutObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var circles=e.target.querySelectorAll('circle');
+        circles.forEach(function(c,i){
+          setTimeout(function(){
+            c.setAttribute('stroke-dasharray',c.getAttribute('data-da'));
+          },i*150);
+        });
+        donutObs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.4});
+  donuts.forEach(function(s){donutObs.observe(s)});
+
+  // ── Back to top button ──
+  var btt=document.querySelector('.btt');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>400) btt.classList.add('show');
+    else btt.classList.remove('show');
+  });
+
+  // ── Section nav active state ──
+  var navLinks=document.querySelectorAll('.section-nav a');
+  var sections=[];
+  navLinks.forEach(function(a){
+    var id=a.getAttribute('href').slice(1);
+    var sec=document.getElementById(id);
+    if(sec) sections.push({el:sec,link:a});
+  });
+  window.addEventListener('scroll',function(){
+    var scrollY=window.scrollY+window.innerHeight/3;
+    var active=null;
+    sections.forEach(function(s){
+      if(s.el.offsetTop<=scrollY) active=s;
+    });
+    navLinks.forEach(function(a){a.classList.remove('active')});
+    if(active) active.link.classList.add('active');
+  });
+
+  // ── Collapsible competitor tables ──
+  var tableHeaders=document.querySelectorAll('.table-scroll');
+  tableHeaders.forEach(function(ts){
+    var prev=ts.previousElementSibling;
+    if(prev&&prev.querySelector('span[style*="font-weight:700"]')){
+      prev.classList.add('table-toggle');
+      var icon=document.createElement('span');
+      icon.className='toggle-icon';
+      icon.textContent='▼';
+      prev.querySelector('span[style*="font-weight:700"]').appendChild(icon);
+      prev.addEventListener('click',function(){
+        prev.classList.toggle('collapsed');
+        ts.style.display=prev.classList.contains('collapsed')?'none':'block';
+      });
+    }
+  });
+
+  // ── Tooltip on bar hover ──
+  var barRows=document.querySelectorAll('.bar');
+  barRows.forEach(function(b){
+    var label=b.querySelector('.bar-l');
+    var val=b.querySelector('.bar-v');
+    if(label&&val){
+      b.title=label.textContent.trim()+' — '+val.textContent.trim()+' links';
+    }
+  });
+
+})();
+</script>
 </body>
 </html>
